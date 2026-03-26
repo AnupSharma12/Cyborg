@@ -1,0 +1,58 @@
+const { ApplicationCommandOptionType } = require("discord.js");
+
+/**
+ * @type {import("@structures/Command")}
+ */
+module.exports = {
+  name: "purgebots",
+  description: "Delete messages sent by bots",
+  category: "MODERATION",
+  botPermissions: ["ManageMessages", "ReadMessageHistory"],
+  userPermissions: ["ManageMessages"],
+  command: {
+    enabled: true,
+    usage: "[amount]",
+    minArgsCount: 0,
+  },
+  slashCommand: {
+    enabled: true,
+    ephemeral: true,
+    options: [
+      {
+        name: "amount",
+        description: "Number of messages to scan (1-100, default 100)",
+        type: ApplicationCommandOptionType.Integer,
+        required: false,
+        minValue: 1,
+        maxValue: 100,
+      },
+    ],
+  },
+
+  async messageRun(message, args) {
+    const amount = parseInt(args[0]) || 100;
+    if (amount < 1 || amount > 100) return message.reply("Amount must be between 1 and 100.");
+
+    const response = await purgeBots(message.channel, amount);
+    const reply = await message.channel.send(response);
+    setTimeout(() => reply.delete().catch(() => null), 3000);
+  },
+
+  async interactionRun(interaction) {
+    const amount = interaction.options.getInteger("amount") || 100;
+    const response = await purgeBots(interaction.channel, amount);
+    await interaction.followUp(response);
+  },
+};
+
+async function purgeBots(channel, amount) {
+  const messages = await channel.messages.fetch({ limit: amount }).catch(() => null);
+  if (!messages) return "Failed to fetch messages.";
+
+  const filtered = messages.filter((m) => m.author.bot);
+  if (filtered.size === 0) return "No bot messages found.";
+
+  const deleted = await channel.bulkDelete(filtered, true).catch(() => null);
+  if (!deleted) return "Failed to delete messages.";
+  return `Successfully deleted **${deleted.size}** bot message(s).`;
+}

@@ -130,7 +130,7 @@ module.exports = {
       );
       await cmd.interactionRun(interaction, {});
     } catch (ex) {
-      await interaction.followUp("An error occurred while running this command.");
+      await interaction.followUp("An error occurred while running this command.").catch(() => null);
       interaction.client.logger.error("interactionRun", ex);
     } finally {
       if (cmd.cooldown > 0) applyCooldown(interaction.user.id, cmd);
