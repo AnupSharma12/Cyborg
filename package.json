@@ -1,0 +1,35 @@
+{
+  "name": "cyborg",
+  "version": "1.0.0",
+  "description": "A powerful Discord Bot",
+  "main": "bot.js",
+  "scripts": {
+    "start": "node bot.js",
+    "dev": "nodemon bot.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AnupSharma12/Cyborg.git"
+  },
+  "keywords": [],
+  "author": "Anup Sharma",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/AnupSharma12/Cyborg/issues"
+  },
+  "homepage": "https://github.com/AnupSharma12/Cyborg#readme",
+  "_moduleAliases": {
+    "@root": ".",
+    "@src": "src",
+    "@handlers": "src/handlers",
+    "@helpers": "src/helpers",
+    "@structures": "src/structures",
+    "@schemas": "src/database/schemas"
+  },
+  "dependencies": {
+    "discord.js": "^14.25.1",
+    "dotenv": "^17.3.1",
+    "module-alias": "^2.3.4"
+  }
+}
