@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 const DURATION_MAP = {
   "1m": 60 * 1000,
@@ -68,7 +69,7 @@ module.exports = {
 
     const reason = args.slice(2).join(" ") || "No reason provided";
     const response = await timeout(message.member, target, DURATION_MAP[duration], duration, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -77,24 +78,24 @@ module.exports = {
     const reason = interaction.options.getString("reason") || "No reason provided";
     const target = await interaction.guild.members.fetch(user.id).catch(() => null);
 
-    if (!target) return interaction.followUp("Could not find that member.");
+    if (!target) return interaction.followUp({ embeds: [error("Could not find that member.")] });
 
     const response = await timeout(interaction.member, target, DURATION_MAP[duration], duration, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function timeout(issuer, target, ms, label, reason) {
-  if (!target.moderatable) return `I do not have permission to timeout ${target.user.username}.`;
+  if (!target.moderatable) return error(`I do not have permission to timeout ${target.user.username}.`);
   const isOwner = issuer.id === issuer.guild.ownerId;
   if (!isOwner && target.roles.highest.position >= issuer.roles.highest.position) {
-    return `You cannot timeout ${target.user.username} — they have an equal or higher role.`;
+    return error(`You cannot timeout ${target.user.username} — they have an equal or higher role.`);
   }
 
   try {
     await target.timeout(ms, `${reason} | By: ${issuer.user.username}`);
-    return `Successfully timed out **${target.user.username}** for ${label}. Reason: ${reason}`;
+    return success(`Timed out **${target.user.username}** for ${label}\nReason: ${reason}`);
   } catch {
-    return `Failed to timeout ${target.user.username}.`;
+    return error(`Failed to timeout ${target.user.username}.`);
   }
 }

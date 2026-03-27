@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -41,7 +42,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await disconnect(message.member, target, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -50,22 +51,22 @@ module.exports = {
     const target = interaction.guild.members.cache.get(user.id) || await interaction.guild.members.fetch(user.id);
 
     const response = await disconnect(interaction.member, target, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function disconnect(issuer, target, reason) {
-  if (!target.voice.channel) return `${target.user.username} is not in a voice channel.`;
+  if (!target.voice.channel) return error(`${target.user.username} is not in a voice channel.`);
 
   const isOwner = issuer.id === issuer.guild.ownerId;
   if (!isOwner && target.roles.highest.position >= issuer.roles.highest.position) {
-    return `You cannot disconnect ${target.user.username} — they have an equal or higher role.`;
+    return error(`You cannot disconnect ${target.user.username} \u2014 they have an equal or higher role.`);
   }
 
   try {
     await target.voice.disconnect(`${reason} | By: ${issuer.user.username}`);
-    return `Successfully disconnected **${target.user.username}** from voice. Reason: ${reason}`;
+    return success(`Disconnected **${target.user.username}** from voice\nReason: ${reason}`);
   } catch {
-    return `Failed to disconnect ${target.user.username}.`;
+    return error(`Failed to disconnect ${target.user.username}.`);
   }
 }

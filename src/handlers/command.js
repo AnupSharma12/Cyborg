@@ -1,5 +1,7 @@
 const { OWNER_IDS, PREFIX_COMMANDS } = require("@root/config");
 const { timeformat } = require("@helpers/Utils");
+const { error } = require("@helpers/EmbedUtils");
+const WebhookLogger = require("@helpers/WebhookLogger");
 const { MessageFlags } = require("discord.js");
 
 const cooldownCache = new Map();
@@ -23,7 +25,7 @@ module.exports = {
 
     // Owner commands
     if (cmd.category === "OWNER" && !OWNER_IDS.includes(message.author.id)) {
-      return message.reply("This command is only accessible to bot owners.");
+      return message.reply({ embeds: [error("This command is only accessible to bot owners.")] });
     }
 
     // Check user permissions
@@ -31,7 +33,7 @@ module.exports = {
       if (
         !message.channel.permissionsFor(message.member).has(cmd.userPermissions)
       ) {
-        return message.reply("You don't have permission to use this command.");
+        return message.reply({ embeds: [error("You don't have permission to use this command.")] });
       }
     }
 
@@ -42,26 +44,20 @@ module.exports = {
           .permissionsFor(message.guild.members.me)
           .has(cmd.botPermissions)
       ) {
-        return message.reply(
-          "I don't have the required permissions for this command."
-        );
+        return message.reply({ embeds: [error("I don't have the required permissions for this command.")] });
       }
     }
 
     // Min args check
     if (cmd.command.minArgsCount > args.length) {
-      return message.reply(
-        `Usage: \`${prefix}${invoke} ${cmd.command.usage || ""}\``
-      );
+      return message.reply({ embeds: [error(`Usage: \`${prefix}${invoke} ${cmd.command.usage || ""}\``)] });
     }
 
     // Cooldown check
     if (cmd.cooldown > 0) {
       const remaining = getRemainingCooldown(message.author.id, cmd);
       if (remaining > 0) {
-        return message.reply(
-          `You are on cooldown. Try again in \`${timeformat(remaining)}\``
-        );
+        return message.reply({ embeds: [error(`You are on cooldown. Try again in \`${timeformat(remaining)}\``)] });
       }
     }
 
@@ -69,7 +65,8 @@ module.exports = {
       await cmd.messageRun(message, args, { prefix, invoke });
     } catch (ex) {
       message.client.logger.error("messageRun", ex);
-      message.reply("An error occurred while running this command.");
+      WebhookLogger.logError(`messageRun: ${cmd.name}`, ex);
+      message.reply({ embeds: [error("An error occurred while running this command.")] });
     } finally {
       if (cmd.cooldown > 0) applyCooldown(message.author.id, cmd);
     }
@@ -88,7 +85,7 @@ module.exports = {
     // Owner commands
     if (cmd.category === "OWNER" && !OWNER_IDS.includes(interaction.user.id)) {
       return interaction.reply({
-        content: "This command is only accessible to bot owners.",
+        embeds: [error("This command is only accessible to bot owners.")],
         flags: MessageFlags.Ephemeral,
       });
     }
@@ -97,7 +94,7 @@ module.exports = {
     if (interaction.member && cmd.userPermissions?.length > 0) {
       if (!interaction.member.permissions.has(cmd.userPermissions)) {
         return interaction.reply({
-          content: "You don't have permission to use this command.",
+          embeds: [error("You don't have permission to use this command.")],
           flags: MessageFlags.Ephemeral,
         });
       }
@@ -107,7 +104,7 @@ module.exports = {
     if (cmd.botPermissions && cmd.botPermissions.length > 0) {
       if (!interaction.guild.members.me.permissions.has(cmd.botPermissions)) {
         return interaction.reply({
-          content: "I don't have the required permissions for this command.",
+          embeds: [error("I don't have the required permissions for this command.")],
           flags: MessageFlags.Ephemeral,
         });
       }
@@ -118,7 +115,7 @@ module.exports = {
       const remaining = getRemainingCooldown(interaction.user.id, cmd);
       if (remaining > 0) {
         return interaction.reply({
-          content: `You are on cooldown. Try again in \`${timeformat(remaining)}\``,
+          embeds: [error(`You are on cooldown. Try again in \`${timeformat(remaining)}\``)],
           flags: MessageFlags.Ephemeral,
         });
       }
@@ -130,8 +127,9 @@ module.exports = {
       if (!interaction.deferred) return;
       await cmd.interactionRun(interaction, {});
     } catch (ex) {
-      await interaction.followUp("An error occurred while running this command.").catch(() => null);
+      await interaction.followUp({ embeds: [error("An error occurred while running this command.")] }).catch(() => null);
       interaction.client.logger.error("interactionRun", ex);
+      WebhookLogger.logError(`interactionRun: ${cmd.name}`, ex);
     } finally {
       if (cmd.cooldown > 0) applyCooldown(interaction.user.id, cmd);
     }

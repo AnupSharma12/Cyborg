@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -60,7 +61,7 @@ module.exports = {
     }
 
     const response = await ban(message.member, target, reason, days);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -69,25 +70,25 @@ module.exports = {
     const reason = interaction.options.getString("reason") || "No reason provided";
     const target = await interaction.guild.members.fetch(user.id).catch(() => null);
 
-    if (!target) return interaction.followUp("Could not find that member.");
+    if (!target) return interaction.followUp({ embeds: [error("Could not find that member.")] });
 
     const response = await ban(interaction.member, target, reason, days);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function ban(issuer, target, reason, days) {
-  if (!target.bannable) return `I do not have permission to ban ${target.user.username}.`;
+  if (!target.bannable) return error(`I do not have permission to ban ${target.user.username}.`);
   const isOwner = issuer.id === issuer.guild.ownerId;
   if (!isOwner && target.roles.highest.position >= issuer.roles.highest.position) {
-    return `You cannot ban ${target.user.username} — they have an equal or higher role.`;
+    return error(`You cannot ban ${target.user.username} — they have an equal or higher role.`);
   }
 
   try {
     await target.ban({ deleteMessageSeconds: days * 86400, reason: `${reason} | By: ${issuer.user.username}` });
-    return `Successfully banned **${target.user.username}**. Reason: ${reason}`;
+    return success(`Banned **${target.user.username}**\nReason: ${reason}`);
   } catch {
-    return `Failed to ban ${target.user.username}.`;
+    return error(`Failed to ban ${target.user.username}.`);
   }
 }
  

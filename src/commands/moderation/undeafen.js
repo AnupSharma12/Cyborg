@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -41,7 +42,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await undeafen(message.member, target, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -50,18 +51,18 @@ module.exports = {
     const target = interaction.guild.members.cache.get(user.id) || await interaction.guild.members.fetch(user.id);
 
     const response = await undeafen(interaction.member, target, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function undeafen(issuer, target, reason) {
-  if (!target.voice.channel) return `${target.user.username} is not in a voice channel.`;
-  if (!target.voice.deaf) return `${target.user.username} is not server deafened.`;
+  if (!target.voice.channel) return error(`${target.user.username} is not in a voice channel.`);
+  if (!target.voice.deaf) return error(`${target.user.username} is not server deafened.`);
 
   try {
     await target.voice.setDeaf(false, `${reason} | By: ${issuer.user.username}`);
-    return `Successfully undeafened **${target.user.username}**. Reason: ${reason}`;
+    return success(`Undeafened **${target.user.username}**\nReason: ${reason}`);
   } catch {
-    return `Failed to undeafen ${target.user.username}.`;
+    return error(`Failed to undeafen ${target.user.username}.`);
   }
 }

@@ -4,6 +4,7 @@ require("module-alias/register");
 const { BotClient } = require("@src/structures");
 const { validateConfiguration } = require("@helpers/Validator");
 const Logger = require("@helpers/Logger");
+const WebhookLogger = require("@helpers/WebhookLogger");
 
 validateConfiguration();
 
@@ -12,7 +13,15 @@ client.loadCommands("src/commands");
 client.loadContexts("src/contexts");
 client.loadEvents("src/events");
 
-process.on("unhandledRejection", (err) => Logger.error("Unhandled exception", err));
+process.on("unhandledRejection", (err) => {
+  Logger.error("Unhandled exception", err);
+  WebhookLogger.logError("Unhandled Rejection", err);
+});
+
+process.on("uncaughtException", (err) => {
+  Logger.error("Uncaught Exception", err);
+  WebhookLogger.logError("Uncaught Exception", err);
+});
 
 (async () => {
   try {

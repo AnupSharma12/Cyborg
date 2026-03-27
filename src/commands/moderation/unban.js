@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -38,7 +39,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await unban(message.guild, match[1], reason, message.author.username);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -49,18 +50,18 @@ module.exports = {
     if (!match) return interaction.followUp("Please provide a valid user ID.");
 
     const response = await unban(interaction.guild, match[1], reason, interaction.user.username);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function unban(guild, userId, reason, issuerName) {
   const ban = await guild.bans.fetch(userId).catch(() => null);
-  if (!ban) return `User \`${userId}\` is not banned.`;
+  if (!ban) return error(`User \`${userId}\` is not banned.`);
 
   try {
     await guild.members.unban(userId, `${reason} | By: ${issuerName}`);
-    return `Successfully unbanned **${ban.user.username}**.`;
+    return success(`Unbanned **${ban.user.username}**`);
   } catch {
-    return `Failed to unban user \`${userId}\`.`;
+    return error(`Failed to unban user \`${userId}\`.`);
   }
 }

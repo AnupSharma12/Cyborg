@@ -1,5 +1,6 @@
 const { ApplicationCommandOptionType } = require("discord.js");
 const { addWarning } = require("@root/src/database/warnings");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -42,7 +43,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await warn(message.guild, message.member, target, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -50,18 +51,18 @@ module.exports = {
     const reason = interaction.options.getString("reason") || "No reason provided";
     const target = await interaction.guild.members.fetch(user.id).catch(() => null);
 
-    if (!target) return interaction.followUp("Could not find that member.");
+    if (!target) return interaction.followUp({ embeds: [error("Could not find that member.")] });
 
     const response = await warn(interaction.guild, interaction.member, target, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function warn(guild, issuer, target, reason) {
-  if (target.user.bot) return "You cannot warn a bot.";
+  if (target.user.bot) return error("You cannot warn a bot.");
   const isOwner = issuer.id === guild.ownerId;
   if (!isOwner && target.roles.highest.position >= issuer.roles.highest.position) {
-    return `You cannot warn ${target.user.username} — they have an equal or higher role.`;
+    return error(`You cannot warn ${target.user.username} \u2014 they have an equal or higher role.`);
   }
 
   const count = addWarning(guild.id, target.id, {
@@ -75,5 +76,5 @@ async function warn(guild, issuer, target, reason) {
     .send(`You have been warned in **${guild.name}**. Reason: ${reason}`)
     .catch(() => null);
 
-  return `**${target.user.username}** has been warned. They now have **${count}** warning(s). Reason: ${reason}`;
+  return success(`Warned **${target.user.username}** (${count} total)\nReason: ${reason}`);
 }

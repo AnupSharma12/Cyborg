@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -41,7 +42,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await kick(message.member, target, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -49,24 +50,24 @@ module.exports = {
     const reason = interaction.options.getString("reason") || "No reason provided";
     const target = await interaction.guild.members.fetch(user.id).catch(() => null);
 
-    if (!target) return interaction.followUp("Could not find that member.");
+    if (!target) return interaction.followUp({ embeds: [error("Could not find that member.")] });
 
     const response = await kick(interaction.member, target, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function kick(issuer, target, reason) {
-  if (!target.kickable) return `I do not have permission to kick ${target.user.username}.`;
+  if (!target.kickable) return error(`I do not have permission to kick ${target.user.username}.`);
   const isOwner = issuer.id === issuer.guild.ownerId;
   if (!isOwner && target.roles.highest.position >= issuer.roles.highest.position) {
-    return `You cannot kick ${target.user.username} — they have an equal or higher role.`;
+    return error(`You cannot kick ${target.user.username} — they have an equal or higher role.`);
   }
 
   try {
     await target.kick(`${reason} | By: ${issuer.user.username}`);
-    return `Successfully kicked **${target.user.username}**. Reason: ${reason}`;
+    return success(`Kicked **${target.user.username}**\nReason: ${reason}`);
   } catch {
-    return `Failed to kick ${target.user.username}.`;
+    return error(`Failed to kick ${target.user.username}.`);
   }
 }

@@ -46,6 +46,16 @@ module.exports = class Logger {
     } else {
       console.error(`[${timestamp()}] [ERROR] ${content}`);
     }
+
+    // Send to webhook (deferred to next tick to avoid circular dependency)
+    const errorContent = content;
+    const errorEx = ex;
+    setImmediate(() => {
+      try {
+        const WebhookLogger = require("./WebhookLogger");
+        WebhookLogger.logError(errorContent, errorEx);
+      } catch {}
+    });
   }
 
   /** @param {string} content */

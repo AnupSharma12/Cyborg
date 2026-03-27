@@ -1,10 +1,5 @@
-const { groupCollapsed } = require("console");
-const { fetchRecommendedShardCount, GuildScheduledEvent, AutoModerationRuleKeywordPresetType, managerToFetchingStrategyOptions } = require("discord.js");
 const fs = require("fs");
-const { Agent } = require("http");
-const { networkInterfaces } = require("os");
 const path = require("path");
-const { getHeapCodeStatistics } = require("v8");
 
 const WARNINGS_FILE = path.join(__dirname, "warnings.json");
 

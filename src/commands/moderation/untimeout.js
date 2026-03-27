@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -41,7 +42,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await untimeout(message.member, target, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -49,23 +50,23 @@ module.exports = {
     const reason = interaction.options.getString("reason") || "No reason provided";
     const target = await interaction.guild.members.fetch(user.id).catch(() => null);
 
-    if (!target) return interaction.followUp("Could not find that member.");
+    if (!target) return interaction.followUp({ embeds: [error("Could not find that member.")] });
 
     const response = await untimeout(interaction.member, target, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function untimeout(issuer, target, reason) {
-  if (!target.moderatable) return `I do not have permission to untimeout ${target.user.username}.`;
+  if (!target.moderatable) return error(`I do not have permission to untimeout ${target.user.username}.`);
   if (!target.communicationDisabledUntilTimestamp) {
-    return `${target.user.username} is not timed out.`;
+    return error(`${target.user.username} is not timed out.`);
   }
 
   try {
     await target.timeout(null, `${reason} | By: ${issuer.user.username}`);
-    return `Successfully removed timeout from **${target.user.username}**.`;
+    return success(`Removed timeout from **${target.user.username}**`);
   } catch {
-    return `Failed to remove timeout from ${target.user.username}.`;
+    return error(`Failed to remove timeout from ${target.user.username}.`);
   }
 }

@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -36,19 +37,19 @@ module.exports = {
     }
 
     const response = await purge(message.channel, amount + 1); // +1 to include the command message
-    const reply = await message.channel.send(response);
+    const reply = await message.channel.send({ embeds: [response] });
     setTimeout(() => reply.delete().catch(() => null), 3000);
   },
 
   async interactionRun(interaction) {
     const amount = interaction.options.getInteger("amount");
     const response = await purge(interaction.channel, amount);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function purge(channel, amount) {
   const deleted = await channel.bulkDelete(amount, true).catch(() => null);
-  if (!deleted) return "Failed to delete messages.";
-  return `Successfully deleted **${deleted.size}** message(s).`;
+  if (!deleted) return error("Failed to delete messages.");
+  return success(`Deleted **${deleted.size}** message(s)`);
 }

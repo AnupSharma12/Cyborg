@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -41,7 +42,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await deafen(message.member, target, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -50,23 +51,23 @@ module.exports = {
     const target = interaction.guild.members.cache.get(user.id) || await interaction.guild.members.fetch(user.id);
 
     const response = await deafen(interaction.member, target, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function deafen(issuer, target, reason) {
-  if (!target.voice.channel) return `${target.user.username} is not in a voice channel.`;
-  if (target.voice.deaf) return `${target.user.username} is already server deafened.`;
+  if (!target.voice.channel) return error(`${target.user.username} is not in a voice channel.`);
+  if (target.voice.deaf) return error(`${target.user.username} is already server deafened.`);
 
   const isOwner = issuer.id === issuer.guild.ownerId;
   if (!isOwner && target.roles.highest.position >= issuer.roles.highest.position) {
-    return `You cannot deafen ${target.user.username} — they have an equal or higher role.`;
+    return error(`You cannot deafen ${target.user.username} \u2014 they have an equal or higher role.`);
   }
 
   try {
     await target.voice.setDeaf(true, `${reason} | By: ${issuer.user.username}`);
-    return `Successfully deafened **${target.user.username}**. Reason: ${reason}`;
+    return success(`Deafened **${target.user.username}**\nReason: ${reason}`);
   } catch {
-    return `Failed to deafen ${target.user.username}.`;
+    return error(`Failed to deafen ${target.user.username}.`);
   }
 }

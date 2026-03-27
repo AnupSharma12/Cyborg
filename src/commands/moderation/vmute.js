@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -41,7 +42,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await vmute(message.member, target, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -50,23 +51,23 @@ module.exports = {
     const target = interaction.guild.members.cache.get(user.id) || await interaction.guild.members.fetch(user.id);
 
     const response = await vmute(interaction.member, target, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function vmute(issuer, target, reason) {
-  if (!target.voice.channel) return `${target.user.username} is not in a voice channel.`;
-  if (target.voice.mute) return `${target.user.username} is already server muted.`;
+  if (!target.voice.channel) return error(`${target.user.username} is not in a voice channel.`);
+  if (target.voice.mute) return error(`${target.user.username} is already server muted.`);
 
   const isOwner = issuer.id === issuer.guild.ownerId;
   if (!isOwner && target.roles.highest.position >= issuer.roles.highest.position) {
-    return `You cannot voice mute ${target.user.username} — they have an equal or higher role.`;
+    return error(`You cannot voice mute ${target.user.username} \u2014 they have an equal or higher role.`);
   }
 
   try {
     await target.voice.setMute(true, `${reason} | By: ${issuer.user.username}`);
-    return `Successfully voice muted **${target.user.username}**. Reason: ${reason}`;
+    return success(`Voice muted **${target.user.username}**\nReason: ${reason}`);
   } catch {
-    return `Failed to voice mute ${target.user.username}.`;
+    return error(`Failed to voice mute ${target.user.username}.`);
   }
 }

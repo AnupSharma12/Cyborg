@@ -1,5 +1,6 @@
 const { ApplicationCommandOptionType } = require("discord.js");
 const { getWarnings, clearWarnings } = require("@root/src/database/warnings");
+const EmbedUtils = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -44,11 +45,11 @@ module.exports = {
 
     if (shouldClear) {
       const count = clearWarnings(message.guild.id, target.id);
-      return message.reply(`Cleared **${count}** warning(s) for **${target.user.username}**.`);
+      return message.reply({ embeds: [EmbedUtils.success(`Cleared **${count}** warning(s) for **${target.user.username}**`)] });
     }
 
-    const response = formatWarnings(message.guild, target);
-    await message.reply(response);
+    const response = formatWarnings(target);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -56,28 +57,34 @@ module.exports = {
     const shouldClear = interaction.options.getBoolean("clear") || false;
     const target = await interaction.guild.members.fetch(user.id).catch(() => null);
 
-    if (!target) return interaction.followUp("Could not find that member.");
+    if (!target) return interaction.followUp({ embeds: [EmbedUtils.error("Could not find that member.")] });
 
     if (shouldClear) {
       const count = clearWarnings(interaction.guild.id, target.id);
-      return interaction.followUp(`Cleared **${count}** warning(s) for **${target.user.username}**.`);
+      return interaction.followUp({ embeds: [EmbedUtils.success(`Cleared **${count}** warning(s) for **${target.user.username}**`)] });
     }
 
-    const response = formatWarnings(interaction.guild, target);
-    await interaction.followUp(response);
+    const response = formatWarnings(target);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
-function formatWarnings(guild, target) {
-  const warnings = getWarnings(guild.id, target.id);
-  if (warnings.length === 0) return `**${target.user.username}** has no warnings.`;
+function formatWarnings(target) {
+  const warnings = getWarnings(target.guild.id, target.id);
+  if (warnings.length === 0) {
+    return EmbedUtils.embed()
+      .setDescription(`${target.user.username} has no warnings.`);
+  }
 
   const list = warnings
     .map((w, i) => {
       const date = new Date(w.timestamp).toLocaleDateString();
-      return `**${i + 1}.** ${w.reason} — by ${w.issuerName} (${date})`;
+      return `**${i + 1}.** ${w.reason}\n\u2514 By: ${w.issuerName} \u2022 ${date}`;
     })
-    .join("\n");
+    .join("\n\n");
 
-  return `**${target.user.username}** has **${warnings.length}** warning(s):\n${list}`;
+  return EmbedUtils.embed()
+    .setAuthor({ name: `Warnings for ${target.user.username}`, iconURL: target.user.displayAvatarURL() })
+    .setDescription(list)
+    .setFooter({ text: `Total: ${warnings.length} warning(s)` });
 }

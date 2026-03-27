@@ -1,4 +1,5 @@
 const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -41,7 +42,7 @@ module.exports = {
 
     const reason = args.slice(1).join(" ") || "No reason provided";
     const response = await vunmute(message.member, target, reason);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -50,18 +51,18 @@ module.exports = {
     const target = interaction.guild.members.cache.get(user.id) || await interaction.guild.members.fetch(user.id);
 
     const response = await vunmute(interaction.member, target, reason);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function vunmute(issuer, target, reason) {
-  if (!target.voice.channel) return `${target.user.username} is not in a voice channel.`;
-  if (!target.voice.mute) return `${target.user.username} is not server muted.`;
+  if (!target.voice.channel) return error(`${target.user.username} is not in a voice channel.`);
+  if (!target.voice.mute) return error(`${target.user.username} is not server muted.`);
 
   try {
     await target.voice.setMute(false, `${reason} | By: ${issuer.user.username}`);
-    return `Successfully voice unmuted **${target.user.username}**. Reason: ${reason}`;
+    return success(`Voice unmuted **${target.user.username}**\nReason: ${reason}`);
   } catch {
-    return `Failed to voice unmute ${target.user.username}.`;
+    return error(`Failed to voice unmute ${target.user.username}.`);
   }
 }

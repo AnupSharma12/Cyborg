@@ -1,4 +1,5 @@
-const { ApplicationCommandOptionType, shouldUseGlobalFetchAndWebSocket, MentionableSelectMenuBuilder, ApplicationCommandNumericOptionMinMaxValueMixin, fetchRecommendedShardCount, SubscriptionManager, FileUploadAssertions } = require("discord.js");
+const { ApplicationCommandOptionType } = require("discord.js");
+const { success, error } = require("@helpers/EmbedUtils");
 
 /**
  * @type {import("@structures/Command")}
@@ -60,7 +61,7 @@ module.exports = {
     }
 
     const response = await softban(message.member, target, reason, days);
-    await message.reply(response);
+    await message.reply({ embeds: [response] });
   },
 
   async interactionRun(interaction) {
@@ -69,25 +70,25 @@ module.exports = {
     const reason = interaction.options.getString("reason") || "No reason provided";
     const target = await interaction.guild.members.fetch(user.id).catch(() => null);
 
-    if (!target) return interaction.followUp("Could not find that member.");
+    if (!target) return interaction.followUp({ embeds: [error("Could not find that member.")] });
 
     const response = await softban(interaction.member, target, reason, days);
-    await interaction.followUp(response);
+    await interaction.followUp({ embeds: [response] });
   },
 };
 
 async function softban(issuer, target, reason, days) {
-  if (!target.bannable) return `I do not have permission to softban ${target.user.username}.`;
+  if (!target.bannable) return error(`I do not have permission to softban ${target.user.username}.`);
   const isOwner = issuer.id === issuer.guild.ownerId;
   if (!isOwner && target.roles.highest.position >= issuer.roles.highest.position) {
-    return `You cannot softban ${target.user.username} — they have an equal or higher role.`;
+    return error(`You cannot softban ${target.user.username} — they have an equal or higher role.`);
   }
 
   try {
     await target.ban({ deleteMessageSeconds: days * 86400, reason: `Softban: ${reason} | By: ${issuer.user.username}` });
     await target.guild.members.unban(target.id, "Softban unban");
-    return `Successfully softbanned **${target.user.username}** (deleted ${days} day(s) of messages). Reason: ${reason}`;
+    return success(`Softbanned **${target.user.username}** (deleted ${days} day(s) of messages)\nReason: ${reason}`);
   } catch {
-    return `Failed to softban ${target.user.username}.`;
+    return error(`Failed to softban ${target.user.username}.`);
   }
 }
