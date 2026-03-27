@@ -17,7 +17,7 @@ module.exports = async (client, interaction) => {
 
   // Slash Commands
   if (interaction.isChatInputCommand()) {
-    await commandHandler.handleSlashCommand(interaction);
+    await commandHandler.handleSlashCommand(interaction).catch(() => {});
   }
 
   // Context Menu
@@ -32,4 +32,6 @@ module.exports = async (client, interaction) => {
         })
         .catch(() => {});
   }
+
+  // Buttons/components — handled by collectors, no action needed here
 };

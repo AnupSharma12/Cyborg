@@ -87,7 +87,7 @@ module.exports = {
       return interaction.reply({
         embeds: [error("This command is only accessible to bot owners.")],
         flags: MessageFlags.Ephemeral,
-      });
+      }).catch(() => {});
     }
 
     // Check user permissions
@@ -96,7 +96,7 @@ module.exports = {
         return interaction.reply({
           embeds: [error("You don't have permission to use this command.")],
           flags: MessageFlags.Ephemeral,
-        });
+        }).catch(() => {});
       }
     }
 
@@ -106,7 +106,7 @@ module.exports = {
         return interaction.reply({
           embeds: [error("I don't have the required permissions for this command.")],
           flags: MessageFlags.Ephemeral,
-        });
+        }).catch(() => {});
       }
     }
 
@@ -117,7 +117,7 @@ module.exports = {
         return interaction.reply({
           embeds: [error(`You are on cooldown. Try again in \`${timeformat(remaining)}\``)],
           flags: MessageFlags.Ephemeral,
-        });
+        }).catch(() => {});
       }
     }
 
