@@ -125,9 +125,9 @@ module.exports = {
     }
 
     try {
-      await interaction.deferReply(
-        cmd.slashCommand.ephemeral ? { flags: MessageFlags.Ephemeral } : {}
-      );
+      const deferOptions = cmd.slashCommand.ephemeral ? { flags: MessageFlags.Ephemeral } : {};
+      await interaction.deferReply(deferOptions).catch(() => null);
+      if (!interaction.deferred) return;
       await cmd.interactionRun(interaction, {});
     } catch (ex) {
       await interaction.followUp("An error occurred while running this command.").catch(() => null);
