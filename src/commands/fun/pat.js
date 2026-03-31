@@ -8,7 +8,7 @@ const { REACTIONS, getReactionGif } = require("@helpers/reactions");
 module.exports = {
   name: "pat",
   description: "Pat someone",
-  category: "FUN",
+  category: "ANIME",
   cooldown: 5,
   botPermissions: ["EmbedLinks"],
   command: {

@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/misc/horny";
 module.exports = {
   name: "horny",
   description: "Apply a horny license to an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

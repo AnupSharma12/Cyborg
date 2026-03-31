@@ -84,11 +84,17 @@ module.exports = class BotClient extends Client {
    * @param {import("@structures/Command")} cmd
    */
   loadCommand(cmd) {
-    if (cmd.category && CommandCategory[cmd.category]?.enabled === false) {
-      this.logger.debug(
-        `Skipping Command ${cmd.name}. Category ${cmd.category} is disabled`
-      );
-      return;
+    // Check if category is disabled in config or in CommandCategory
+    if (cmd.category) {
+      const configCat = this.config.CATEGORIES?.[cmd.category];
+      if (configCat && configCat.enabled === false) {
+        this.logger.debug(`Skipping Command ${cmd.name}. Category ${cmd.category} is disabled in config`);
+        return;
+      }
+      if (CommandCategory[cmd.category]?.enabled === false) {
+        this.logger.debug(`Skipping Command ${cmd.name}. Category ${cmd.category} is disabled`);
+        return;
+      }
     }
 
     // Prefix Command

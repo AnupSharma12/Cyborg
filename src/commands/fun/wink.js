@@ -7,7 +7,7 @@ const { REACTIONS, getReactionGif } = require("@helpers/reactions");
 module.exports = {
   name: "wink",
   description: "Wink at everyone",
-  category: "FUN",
+  category: "ANIME",
   cooldown: 5,
   botPermissions: ["EmbedLinks"],
   command: {

@@ -9,7 +9,7 @@ const API_URL = "https://api.popcat.xyz/jokeoverhead";
 module.exports = {
   name: "jokeoverhead",
   description: "The joke went over their head",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

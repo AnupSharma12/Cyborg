@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/filter/sepia";
 module.exports = {
   name: "sepia",
   description: "Apply a sepia filter to an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

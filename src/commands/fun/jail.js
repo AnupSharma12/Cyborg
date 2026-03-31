@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/overlay/jail";
 module.exports = {
   name: "jail",
   description: "Put someone behind bars",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

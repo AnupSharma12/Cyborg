@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/overlay/triggered";
 module.exports = {
   name: "triggered",
   description: "Apply a triggered effect to an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

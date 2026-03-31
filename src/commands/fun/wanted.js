@@ -9,7 +9,7 @@ const API_URL = "https://api.popcat.xyz/wanted";
 module.exports = {
   name: "wanted",
   description: "Put a wanted poster on an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

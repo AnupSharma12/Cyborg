@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/filter/invert";
 module.exports = {
   name: "invert",
   description: "Invert the colors of an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/overlay/passed";
 module.exports = {
   name: "passed",
   description: "Apply a mission passed overlay",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

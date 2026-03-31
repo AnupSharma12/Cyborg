@@ -1,6 +1,6 @@
 const { version: djsVersion } = require("discord.js");
 const EmbedUtils = require("@helpers/EmbedUtils");
-const os = require("os");
+const { SUPPORT_SERVER, PREFIX_COMMANDS } = require("@root/config");
 
 /**
  * @type {import("@structures/Command")}
@@ -43,8 +43,14 @@ function buildEmbed(client) {
   const uptime = `${days}d ${hours}h ${minutes}m ${seconds}s`;
 
   const memUsed = (process.memoryUsage().heapUsed / 1024 / 1024).toFixed(1);
+  const prefix = PREFIX_COMMANDS.DEFAULT_PREFIX;
 
-  return EmbedUtils.embed()
+  const totalCommands = new Set([
+    ...client.commands.map((c) => c.name),
+    ...client.slashCommands.map((c) => c.name),
+  ]).size;
+
+  const embed = EmbedUtils.embed()
     .setAuthor({ name: client.user.username, iconURL: client.user.displayAvatarURL() })
     .setThumbnail(client.user.displayAvatarURL({ size: 256 }))
     .addFields(
@@ -54,9 +60,14 @@ function buildEmbed(client) {
       { name: "Servers", value: `\`${guilds}\``, inline: true },
       { name: "Users", value: `\`${users.toLocaleString()}\``, inline: true },
       { name: "Channels", value: `\`${channels}\``, inline: true },
+      { name: "Commands", value: `\`${totalCommands}\``, inline: true },
+      { name: "Prefix", value: `\`${prefix}\``, inline: true },
+      { name: "Memory", value: `\`${memUsed} MB\``, inline: true },
       { name: "Node.js", value: `\`${process.version}\``, inline: true },
       { name: "Discord.js", value: `\`v${djsVersion}\``, inline: true },
-      { name: "Memory", value: `\`${memUsed} MB\``, inline: true },
+      { name: "Links", value: SUPPORT_SERVER ? `[Support Server](${SUPPORT_SERVER})` : "None", inline: true },
     )
     .setFooter({ text: `Made with ❤️ by Anup Sharma` });
+
+  return embed;
 }

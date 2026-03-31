@@ -7,7 +7,7 @@ const { REACTIONS, getReactionGif } = require("@helpers/reactions");
 module.exports = {
   name: "smug",
   description: "Show a smug face",
-  category: "FUN",
+  category: "ANIME",
   cooldown: 5,
   botPermissions: ["EmbedLinks"],
   command: {

@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/misc/heart";
 module.exports = {
   name: "heart",
   description: "Place a heart overlay on an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

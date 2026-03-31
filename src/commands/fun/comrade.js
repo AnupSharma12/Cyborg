@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/overlay/comrade";
 module.exports = {
   name: "comrade",
   description: "Apply a comrade overlay to an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/filter/distort";
 module.exports = {
   name: "distort",
   description: "Distort an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

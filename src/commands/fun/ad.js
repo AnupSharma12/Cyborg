@@ -9,7 +9,7 @@ const API_URL = "https://api.popcat.xyz/ad";
 module.exports = {
   name: "ad",
   description: "Place an image on a mobile ad",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

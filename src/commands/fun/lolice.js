@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/misc/lolice";
 module.exports = {
   name: "lolice",
   description: "Generate a lolice meme",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

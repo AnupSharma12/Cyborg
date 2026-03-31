@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/misc/its-so-stupid";
 module.exports = {
   name: "its-so-stupid",
   description: "Generate an 'it's so stupid' meme",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

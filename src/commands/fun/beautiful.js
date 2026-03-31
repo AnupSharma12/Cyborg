@@ -9,7 +9,7 @@ const API_URL = "https://api.popcat.xyz/beautiful";
 module.exports = {
   name: "beautiful",
   description: "Make an image beautiful",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

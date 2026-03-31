@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/filter/sharpen";
 module.exports = {
   name: "sharpen",
   description: "Sharpen an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

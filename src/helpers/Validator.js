@@ -5,14 +5,32 @@ module.exports = class Validator {
   static validateConfiguration() {
     log("Validating config file and environment variables");
 
+    // Environment variables
     if (!process.env.DISCORD_TOKEN) {
       error("env: DISCORD_TOKEN cannot be empty");
       process.exit(1);
     }
 
     const config = require("@root/config");
+
+    // Required fields
     if (config.OWNER_IDS.length === 0) warn("config.js: OWNER_IDS are empty");
     if (!config.SUPPORT_SERVER) warn("config.js: SUPPORT_SERVER is not provided");
+
+    // Prefix config
+    if (config.PREFIX_COMMANDS?.ENABLED && !config.PREFIX_COMMANDS?.DEFAULT_PREFIX) {
+      warn("config.js: PREFIX_COMMANDS.DEFAULT_PREFIX is not set while prefix commands are enabled");
+    }
+
+    // Interactions config
+    if (!config.INTERACTIONS?.GLOBAL && !config.INTERACTIONS?.TEST_GUILD_ID) {
+      warn("config.js: INTERACTIONS.GLOBAL is false but TEST_GUILD_ID is not set");
+    }
+
+    // Presence config
+    if (config.PRESENCE?.ENABLED && (!config.PRESENCE?.ACTIVITIES || config.PRESENCE.ACTIVITIES.length === 0)) {
+      warn("config.js: PRESENCE is enabled but no ACTIVITIES are defined");
+    }
   }
 
   /**

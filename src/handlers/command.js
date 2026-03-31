@@ -1,4 +1,4 @@
-const { OWNER_IDS, PREFIX_COMMANDS } = require("@root/config");
+const { OWNER_IDS, PREFIX_COMMANDS, COOLDOWN } = require("@root/config");
 const { timeformat } = require("@helpers/Utils");
 const { error } = require("@helpers/EmbedUtils");
 const WebhookLogger = require("@helpers/WebhookLogger");
@@ -55,9 +55,12 @@ module.exports = {
 
     // Cooldown check
     if (cmd.cooldown > 0) {
-      const remaining = getRemainingCooldown(message.author.id, cmd);
-      if (remaining > 0) {
-        return message.reply({ embeds: [error(`You are on cooldown. Try again in \`${timeformat(remaining)}\``)] });
+      const isOwner = COOLDOWN?.OWNER_BYPASS && OWNER_IDS.includes(message.author.id);
+      if (!isOwner) {
+        const remaining = getRemainingCooldown(message.author.id, cmd);
+        if (remaining > 0) {
+          return message.reply({ embeds: [error(`You are on cooldown. Try again in \`${timeformat(remaining)}\``)] });
+        }
       }
     }
 
@@ -68,7 +71,10 @@ module.exports = {
       WebhookLogger.logError(`messageRun: ${cmd.name}`, ex);
       message.reply({ embeds: [error("An error occurred while running this command.")] });
     } finally {
-      if (cmd.cooldown > 0) applyCooldown(message.author.id, cmd);
+      if (cmd.cooldown > 0) {
+        const isOwner = COOLDOWN?.OWNER_BYPASS && OWNER_IDS.includes(message.author.id);
+        if (!isOwner) applyCooldown(message.author.id, cmd);
+      }
     }
   },
 
@@ -112,12 +118,15 @@ module.exports = {
 
     // Cooldown check
     if (cmd.cooldown > 0) {
-      const remaining = getRemainingCooldown(interaction.user.id, cmd);
-      if (remaining > 0) {
-        return interaction.reply({
-          embeds: [error(`You are on cooldown. Try again in \`${timeformat(remaining)}\``)],
-          flags: MessageFlags.Ephemeral,
-        }).catch(() => {});
+      const isOwner = COOLDOWN?.OWNER_BYPASS && OWNER_IDS.includes(interaction.user.id);
+      if (!isOwner) {
+        const remaining = getRemainingCooldown(interaction.user.id, cmd);
+        if (remaining > 0) {
+          return interaction.reply({
+            embeds: [error(`You are on cooldown. Try again in \`${timeformat(remaining)}\``)],
+            flags: MessageFlags.Ephemeral,
+          }).catch(() => {});
+        }
       }
     }
 
@@ -131,7 +140,10 @@ module.exports = {
       interaction.client.logger.error("interactionRun", ex);
       WebhookLogger.logError(`interactionRun: ${cmd.name}`, ex);
     } finally {
-      if (cmd.cooldown > 0) applyCooldown(interaction.user.id, cmd);
+      if (cmd.cooldown > 0) {
+        const isOwner = COOLDOWN?.OWNER_BYPASS && OWNER_IDS.includes(interaction.user.id);
+        if (!isOwner) applyCooldown(interaction.user.id, cmd);
+      }
     }
   },
 

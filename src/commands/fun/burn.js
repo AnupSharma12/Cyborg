@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/filter/burn";
 module.exports = {
   name: "burn",
   description: "Apply a burn filter to an image",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {

@@ -9,7 +9,7 @@ const API_URL = "https://some-random-api.com/canvas/filter/greyscale";
 module.exports = {
   name: "greyscale",
   description: "Convert an image to greyscale",
-  category: "FUN",
+  category: "IMAGE",
   cooldown: 5,
   botPermissions: ["EmbedLinks", "AttachFiles"],
   command: {
