@@ -1,6 +1,7 @@
 const { commandHandler } = require("@src/handlers");
 const { PREFIX_COMMANDS, SUPPORT_SERVER } = require("@root/config");
 const EmbedUtils = require("@helpers/EmbedUtils");
+const { getAfkMentions, removeAfk } = require("@src/database/afk");
 
 /**
  * @param {import("@src/structures").BotClient} client
@@ -8,6 +9,28 @@ const EmbedUtils = require("@helpers/EmbedUtils");
  */
 module.exports = async (client, message) => {
   if (!message.guild || message.author.bot) return;
+
+  const removedAfk = removeAfk(message.guild.id, message.author.id);
+  if (removedAfk) {
+    await message.reply({
+      embeds: [EmbedUtils.success("Welcome back! I removed your AFK status.")],
+    }).catch(() => {});
+  }
+
+  const mentionedIds = [...new Set(message.mentions.users.map((user) => user.id))]
+    .filter((id) => id !== message.author.id);
+  const afkMentions = getAfkMentions(message.guild.id, mentionedIds);
+
+  if (afkMentions.length > 0) {
+    const lines = afkMentions.slice(0, 5).map((entry) => {
+      const relative = `<t:${Math.floor(entry.data.since / 1000)}:R>`;
+      return `<@${entry.id}> is AFK (${relative})\nReason: **${entry.data.reason}**`;
+    });
+
+    await message.reply({
+      embeds: [EmbedUtils.warning(lines.join("\n\n"))],
+    }).catch(() => {});
+  }
 
   if (PREFIX_COMMANDS.ENABLED) {
     const prefix = PREFIX_COMMANDS.DEFAULT_PREFIX;

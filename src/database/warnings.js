@@ -1,16 +1,24 @@
 const fs = require("fs");
 const path = require("path");
 
-const WARNINGS_FILE = path.join(__dirname, "warnings.json");
+const DATA_FILE = path.join(__dirname, "data.json");
 
 function loadWarnings() {
-  if (!fs.existsSync(WARNINGS_FILE)) return {};
-  const data = fs.readFileSync(WARNINGS_FILE, "utf-8");
-  return JSON.parse(data);
+  if (!fs.existsSync(DATA_FILE)) return {};
+  const data = fs.readFileSync(DATA_FILE, "utf-8");
+  const parsed = JSON.parse(data || "{}");
+  return parsed.warnings || {};
 }
 
 function saveWarnings(data) {
-  fs.writeFileSync(WARNINGS_FILE, JSON.stringify(data, null, 2), "utf-8");
+  const parsed = fs.existsSync(DATA_FILE)
+    ? JSON.parse(fs.readFileSync(DATA_FILE, "utf-8") || "{}")
+    : {};
+
+  parsed.warnings = data;
+  if (!parsed.afk) parsed.afk = {};
+
+  fs.writeFileSync(DATA_FILE, JSON.stringify(parsed, null, 2), "utf-8");
 }
 
 /**
