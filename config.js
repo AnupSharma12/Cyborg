@@ -38,8 +38,15 @@ module.exports = {
     IMAGE: { enabled: true },
     ANIME: { enabled: true },
     MODERATION: { enabled: true },
+    GIVEAWAY: { enabled: true },
     OWNER: { enabled: true },
     UTILITY: { enabled: true },
     NONE: { enabled: true },
+  },
+  GIVEAWAYS: {
+    ENABLED: true,
+    REACTION: "🎁",
+    START_EMBED: "#5865F2",
+    END_EMBED: "#2B2D31",
   },
 };

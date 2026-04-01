@@ -35,6 +35,12 @@ module.exports = {
     image: "https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/shield-icon.png",
     description: "Server moderation and member management tools",
   },
+  GIVEAWAY: {
+    name: "Giveaway",
+    emoji: "🎉",
+    image: "https://icons.iconarchive.com/icons/google/noto-emoji-objects/256/62856-wrapped-gift-icon.png",
+    description: "Giveaway management commands (start, pause, resume, end, reroll, edit, list)",
+  },
   OWNER: {
     name: "Owner",
     emoji: "🤴",

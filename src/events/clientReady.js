@@ -40,6 +40,14 @@ module.exports = async (client) => {
 
   client.logger.success(`Logged in as ${client.user.tag}! (${client.user.id})`);
 
+  if (config.GIVEAWAYS?.ENABLED && client.giveawaysManager) {
+    client.logger.log("Initializing giveaways manager...");
+    await client.giveawaysManager
+      ._init()
+      .then(() => client.logger.success("Giveaway Manager initialized"))
+      .catch((err) => client.logger.error("Giveaway Manager init failed", err));
+  }
+
   // ─── Presence / Activity ─────────────────────────────────────────
   if (presence.ENABLED !== false) {
     const activities = presence.ACTIVITIES || [

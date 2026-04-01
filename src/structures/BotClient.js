@@ -9,6 +9,7 @@ const Logger = require("../helpers/Logger");
 const { recursiveReadDirSync } = require("../helpers/Utils");
 const { validateCommand, validateContext } = require("../helpers/Validator");
 const CommandCategory = require("./CommandCategory");
+const giveawaysHandler = require("@handlers/giveaway");
 
 module.exports = class BotClient extends Client {
   constructor() {
@@ -39,6 +40,10 @@ module.exports = class BotClient extends Client {
     this.contextMenus = new Collection();
 
     this.logger = Logger;
+
+    if (this.config.GIVEAWAYS?.ENABLED) {
+      this.giveawaysManager = giveawaysHandler(this);
+    }
   }
 
   /**
