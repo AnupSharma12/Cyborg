@@ -35,6 +35,12 @@ module.exports = {
     image: "https://icons.iconarchive.com/icons/paomedia/small-n-flat/256/shield-icon.png",
     description: "Server moderation and member management tools",
   },
+  AUTOMOD: {
+    name: "Automod",
+    emoji: "🛡️",
+    image: "https://icons.iconarchive.com/icons/icons8/windows-8/256/Security-Checked-Shield-icon.png",
+    description: "Automatic moderation settings and detection controls",
+  },
   GIVEAWAY: {
     name: "Giveaway",
     emoji: "🎉",

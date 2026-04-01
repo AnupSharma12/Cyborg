@@ -1,5 +1,25 @@
 {
   "warnings": {},
   "afk": {},
-  "giveaways": {}
+  "giveaways": {},
+  "automod": {
+    "1362023048383037451": {
+      "settings": {
+        "strikes": 5,
+        "action": "TIMEOUT",
+        "debug": true,
+        "wh_channels": [],
+        "anti_ghostping": true,
+        "anti_spam": false,
+        "anti_caps": true,
+        "anti_repeat": true,
+        "anti_massmention": 3,
+        "anti_attachments": false,
+        "anti_invites": false,
+        "anti_links": false,
+        "max_lines": 0
+      },
+      "strikes": {}
+    }
+  }
 }

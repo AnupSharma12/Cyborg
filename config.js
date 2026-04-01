@@ -38,6 +38,7 @@ module.exports = {
     IMAGE: { enabled: true },
     ANIME: { enabled: true },
     MODERATION: { enabled: true },
+    AUTOMOD: { enabled: true },
     GIVEAWAY: { enabled: true },
     OWNER: { enabled: true },
     UTILITY: { enabled: true },

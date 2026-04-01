@@ -2,6 +2,7 @@ const { commandHandler } = require("@src/handlers");
 const { PREFIX_COMMANDS, SUPPORT_SERVER } = require("@root/config");
 const EmbedUtils = require("@helpers/EmbedUtils");
 const { getAfkMentions, removeAfk } = require("@src/database/afk");
+const automodHandler = require("@handlers/automod");
 
 /**
  * @param {import("@src/structures").BotClient} client
@@ -32,8 +33,17 @@ module.exports = async (client, message) => {
     }).catch(() => {});
   }
 
+  const prefix = PREFIX_COMMANDS.DEFAULT_PREFIX;
+
+  // Track possible ghost pings for delete-event checks.
+  automodHandler.trackPotentialGhostPing(message);
+
+  const isPotentialPrefix = PREFIX_COMMANDS.ENABLED && message.content && message.content.startsWith(prefix);
+  if (!isPotentialPrefix) {
+    await automodHandler.performAutomod(message);
+  }
+
   if (PREFIX_COMMANDS.ENABLED) {
-    const prefix = PREFIX_COMMANDS.DEFAULT_PREFIX;
 
     // Check for bot mentions
     if (message.content.includes(`${client.user.id}`)) {
