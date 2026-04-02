@@ -15,6 +15,17 @@ module.exports = {
     COLOR: 0x5865f2, // Default embed color (blurple)
     FOOTER: 'Cyborg Bot', // Default footer text
   },
+  EMBED_COLORS: {
+    BOT_EMBED: '#2B2D31',
+    TRANSPARENT: '#2B2D31',
+    SUCCESS: '#23A559',
+    ERROR: '#ED4245',
+    WARNING: '#F0B232',
+    MUSIC: '#5865F2',
+    INFO: '#5865F2',
+    ECONOMY: '#F47B67',
+    AUTOMOD: '#EB459E',
+  },
   PRESENCE: {
     ENABLED: true, // Enable/Disable rotating presence
     STATUS: 'online', // online | idle | dnd | invisible
@@ -37,12 +48,18 @@ module.exports = {
     FUN: { enabled: true },
     IMAGE: { enabled: true },
     ANIME: { enabled: true },
+    MUSIC: { enabled: true },
     MODERATION: { enabled: true },
     AUTOMOD: { enabled: true },
     GIVEAWAY: { enabled: true },
     OWNER: { enabled: true },
     UTILITY: { enabled: true },
     NONE: { enabled: true },
+  },
+  MUSIC: {
+    ENABLED: true,
+    IDLE_TIME: 60,
+    DEFAULT_VOLUME: 80,
   },
   GIVEAWAYS: {
     ENABLED: true,

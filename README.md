@@ -1,53 +1,50 @@
 <p align="center">
   <img src="https://img.shields.io/badge/discord.js-v14-5865F2?style=for-the-badge&logo=discord&logoColor=white" />
   <img src="https://img.shields.io/badge/node.js-v18+-339933?style=for-the-badge&logo=node.js&logoColor=white" />
-  <img src="https://img.shields.io/badge/commands-65+-orange?style=for-the-badge" />
+  <img src="https://img.shields.io/badge/commands-94+-orange?style=for-the-badge" />
   <img src="https://img.shields.io/badge/license-ISC-blue?style=for-the-badge" />
 </p>
 
-# Cyborg
+# Cyborg Bot
 
-A feature-rich, fully configurable **Discord bot** built with discord.js v14. Packed with **65+ commands** across 5 categories — moderation, fun, anime reactions, image manipulation, and more. Supports both slash commands and prefix commands out of the box.
+A feature-rich, fully configurable **Discord bot** built with discord.js v14. Packed with **94+ commands** across multiple categories including moderation, music, fun, anime reactions, giveaways, and more. Supports both slash commands and prefix commands out of the box.
+
+**🎵 Music System:** Full YouTube streaming with yt-dlp, cookie authentication, and FFmpeg transcoding.
 
 ---
 
-## Features
+## ✨ Features
 
 - **Dual Command System** — Slash commands + prefix commands, independently toggleable
-- **65+ Commands** — Moderation, fun, anime, image manipulation, and information
+- **94+ Commands** — Moderation, music, fun, anime, image, giveaways, and more
+- **🎵 Full Music System** — YouTube streaming with yt-dlp, Opus codec, FFmpeg transcoding
+  - 12 music commands: play, queue, skip, pause, resume, stop, loop, shuffle, clear, volume, leave, nowplaying
+  - Cookie-based authentication for better YouTube access
+  - Fallback to play-dl library on bot detection
+  - Interactive controller with buttons for playback control
 - **Interactive Help Menu** — Category select dropdown with paginated command browsing
 - **Rich Embeds** — Every response uses clean, color-coded embeds
-- **Moderation Suite** — Ban, kick, softban, timeout, warn, purge, voice moderation, nicknames
-- **Image Manipulation** — 28 image commands: filters, generators, and overlays
-- **Anime Reactions** — 10 anime GIF reaction commands for social interaction
-- **Fun Commands** — Coin flip, memes, would-you-rather, fake hack, animals, facts, pickup lines
-- **Warning System** — File-based warning database with add and view
-- **Webhook Logging** — Error and guild join/leave webhook notifications
-- **Rotating Status** — Configurable activity messages showing live stats
-- **Category System** — Enable/disable entire command categories from config
-- **Cooldown System** — Per-command cooldowns with owner bypass option
-- **Graceful Shutdown** — Clean disconnect on SIGINT/SIGTERM
-- **Auto-loading** — Commands, events, and contexts are auto-discovered from directories
+- **Moderation Suite** — Ban, kick, softban, timeout, warn, purge, voice moderation
+- **Image Manipulation** — Filters, generators, and overlays
+- **Anime Reactions** — GIF reaction commands for social interaction
+- **Fun Commands** — Games, facts, memes, and more
+- **Giveaways System** — Full giveaway management
+- **Warning System** — Database with add and view capabilities
+- **Webhook Logging** — Error and guild join/leave notifications
+- **Rotating Status** — Live stats (servers, users, commands)
+- **Category System** — Enable/disable entire categories
+- **Cooldown System** — Owner bypass option
+- **Auto-loading** — Discord.js best practices
 
 ---
 
-## Commands
+## 📋 Quick Start
 
-### 🪧 Information (3)
-
-| Command | Description |
-|---------|-------------|
-| `help` | Interactive help menu with category dropdown |
-| `ping` | Check bot latency and uptime |
-| `botinfo` | View bot statistics, version, and system info |
-
-### 🔨 Moderation (20)
-
-| Command | Description |
-|---------|-------------|
-| `kick` | Kick a member from the server |
-| `ban` | Ban a member from the server |
-| `unban` | Unban a user by ID |
+### Prerequisites
+- Node.js 18+ (v24.14.1 recommended)
+- npm or yarn
+- Discord Bot Token
+- FFmpeg (auto-bundled via ffmpeg-static)
 | `softban` | Ban and immediately unban to purge messages |
 | `timeout` | Timeout a member for a duration |
 | `untimeout` | Remove timeout from a member |
@@ -100,6 +97,71 @@ A feature-rich, fully configurable **Discord bot** built with discord.js v14. Pa
 **Generators (10):** `ad`, `beautiful`, `jokeoverhead`, `wanted`, `circle`, `heart`, `lolice`, `its-so-stupid`, `horny`, `simpcard`
 
 **Overlays (7):** `wasted`, `jail`, `gay`, `passed`, `triggered`, `comrade`, `glass`
+
+---
+
+## 🚀 Installation & Deployment
+
+### Local Development
+
+```bash
+# Clone repo
+git clone https://github.com/AnupSharma12/Cyborg.git
+cd Cyborg
+
+# Install dependencies
+npm install
+
+# Copy environment template
+cp .env.example .env
+
+# Edit .env with your bot token
+# DISCORD_TOKEN=your_token_here
+# DISCORD_CLIENT_ID=your_client_id_here
+
+# Start bot
+npm start
+
+# For development with auto-reload
+npm run dev
+```
+
+### Production Deployment
+
+#### Using Pterodactyl Panel (recommended):
+1. Create a new egg/instance
+2. Set **Start Command**: `npm install && npm start`
+3. Set **Java/Node Version**: Node.js 18+ (v24 recommended)
+4. Set **Memory**: 256MB minimum, 512MB+ recommended
+5. Add environment variables from `.env`
+
+#### Using Railway/Render:
+1. Connect your GitHub repo
+2. Set **Build Command**: `npm install`
+3. Set **Start Command**: `npm start`
+4. Add secrets for `DISCORD_TOKEN` and `DISCORD_CLIENT_ID`
+
+#### Using Docker:
+```dockerfile
+FROM node:24-alpine
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci --only=production
+COPY . .
+CMD ["npm", "start"]
+```
+
+### Music Setup (Optional)
+
+For YouTube streaming, add cookies for better access:
+
+**Using Netscape Format (.txt):**
+Export from your browser using a cookie extension and save as `cookies.txt` in the project root.
+
+**Using Chrome Export (.json):**
+Export cookies as JSON and save as `cookies.json` in the project root.
+
+The bot will auto-detect and use cookies from: `cookies.txt`, `cookies.json`, `youtube_cookies.txt`, `youtube_cookies.json`
 
 ---
 

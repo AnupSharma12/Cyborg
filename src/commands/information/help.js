@@ -127,7 +127,7 @@ function getMainMenu(client, categories) {
 
   // Add category overview fields
   const sortedCats = Object.entries(categories).sort(([a], [b]) => {
-    const order = ["INFORMATION", "MODERATION", "AUTOMOD", "GIVEAWAY", "FUN", "ANIME", "IMAGE", "UTILITY", "ADMIN", "OWNER", "NONE"];
+    const order = ["INFORMATION", "MODERATION", "AUTOMOD", "GIVEAWAY", "MUSIC", "FUN", "ANIME", "IMAGE", "UTILITY", "ADMIN", "OWNER", "NONE"];
     return order.indexOf(a) - order.indexOf(b);
   });
 
@@ -232,7 +232,7 @@ function getCommandHelp(cmd, prefix, client) {
 // ─── Select Menu ─────────────────────────────────────────────────────────────
 
 function getSelectMenu(categories) {
-  const order = ["INFORMATION", "MODERATION", "AUTOMOD", "GIVEAWAY", "FUN", "ANIME", "IMAGE", "UTILITY", "ADMIN", "OWNER", "NONE"];
+  const order = ["INFORMATION", "MODERATION", "AUTOMOD", "GIVEAWAY", "MUSIC", "FUN", "ANIME", "IMAGE", "UTILITY", "ADMIN", "OWNER", "NONE"];
   const sortedKeys = Object.keys(categories).sort((a, b) => order.indexOf(a) - order.indexOf(b));
 
   const options = sortedKeys.map((cat) => {

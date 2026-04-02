@@ -1,5 +1,6 @@
 const { commandHandler, contextHandler } = require("@src/handlers");
 const { MessageFlags } = require("discord.js");
+const { handleMusicButton } = require("@handlers/musicButtons");
 
 /**
  * @param {import("@src/structures").BotClient} client
@@ -33,5 +34,10 @@ module.exports = async (client, interaction) => {
         .catch(() => {});
   }
 
-  // Buttons/components — handled by collectors, no action needed here
+  // Buttons
+  else if (interaction.isButton()) {
+    if (interaction.customId.startsWith("MUSIC_")) {
+      return handleMusicButton(interaction);
+    }
+  }
 };

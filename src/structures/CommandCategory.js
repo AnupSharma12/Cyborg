@@ -29,6 +29,12 @@ module.exports = {
     image: "https://icons.iconarchive.com/icons/google/noto-emoji-animals-nature/256/22214-cherry-blossom-icon.png",
     description: "Anime reaction GIFs for interacting with others",
   },
+  MUSIC: {
+    name: "Music",
+    emoji: "🎵",
+    image: "https://icons.iconarchive.com/icons/custom-icon-design/flatastic-9/256/Music-icon.png",
+    description: "Music playback and queue management commands",
+  },
   MODERATION: {
     name: "Moderation",
     emoji: "🔨",

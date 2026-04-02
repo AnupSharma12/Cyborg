@@ -1,10 +1,35 @@
+// Setup FFmpeg for voice streaming (discord.js voice dependency)
+try {
+  const ffmpegPath = require('ffmpeg-static');
+  if (ffmpegPath) {
+    const path = require('path');
+    process.env.FFMPEG_PATH = ffmpegPath;
+    // Also add to PATH for @discordjs/voice to find it
+    process.env.PATH = `${path.dirname(ffmpegPath)};${process.env.PATH}`;
+    console.log(`[FFmpeg] Found at: ${ffmpegPath}`);
+  }
+} catch (e) {
+  console.warn('ffmpeg-static not available, trying system FFmpeg');
+}
+
 require("dotenv").config();
 require("module-alias/register");
+
+const { Message } = require("discord.js");
 
 const { BotClient } = require("@src/structures");
 const { validateConfiguration } = require("@helpers/Validator");
 const Logger = require("@helpers/Logger");
 const WebhookLogger = require("@helpers/WebhookLogger");
+
+if (typeof Message.prototype.safeReply !== "function") {
+  Message.prototype.safeReply = function safeReply(payload) {
+    if (this.channel) {
+      return this.channel.send(payload).catch(() => this.reply(payload));
+    }
+    return this.reply(payload);
+  };
+}
 
 validateConfiguration();
 

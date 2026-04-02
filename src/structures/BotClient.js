@@ -10,6 +10,7 @@ const { recursiveReadDirSync } = require("../helpers/Utils");
 const { validateCommand, validateContext } = require("../helpers/Validator");
 const CommandCategory = require("./CommandCategory");
 const giveawaysHandler = require("@handlers/giveaway");
+const MusicManager = require("@handlers/music-manager");
 
 module.exports = class BotClient extends Client {
   constructor() {
@@ -40,6 +41,11 @@ module.exports = class BotClient extends Client {
     this.contextMenus = new Collection();
 
     this.logger = Logger;
+
+    if (this.config.MUSIC?.ENABLED) {
+      this.musicManager = new MusicManager(this);
+      this.musicManager.initialize();
+    }
 
     if (this.config.GIVEAWAYS?.ENABLED) {
       this.giveawaysManager = giveawaysHandler(this);
