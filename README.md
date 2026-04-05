@@ -75,6 +75,32 @@ A feature-rich, fully configurable **Discord bot** built with discord.js v14. Pa
 | `facts` | Random interesting facts |
 | `pickupline` | Random pickup lines |
 
+### 🛡️ Admin (1)
+
+| Command | Description |
+|---------|-------------|
+| `say` | Send a message as the bot to a channel you choose |
+
+### ℹ️ Information (3)
+
+| Command | Description |
+|---------|-------------|
+| `help` | List all commands or get info about a specific command |
+| `ping` | Shows the current ping from the bot to Discord servers |
+| `botinfo` | Shows information about the bot |
+
+### 🔧 Utility (7)
+
+| Command | Description |
+|---------|-------------|
+| `afk` | Set your AFK status with an optional reason |
+| `bigemoji` | Enlarge a custom or unicode emoji |
+| `encode` | Encode text into binary |
+| `decode` | Decode binary into text |
+| `translate` | Translate text to another language |
+| `urban` | Search Urban Dictionary for a term |
+| `weather` | Get current weather and forecast for a location |
+
 ### 💮 Anime (10)
 
 | Command | Description |

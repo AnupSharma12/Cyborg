@@ -7,8 +7,8 @@ const REACTIONS = {
   pat: { emoji: "✋", verb: "patted", api: "pat" },
   cuddle: { emoji: "🥰", verb: "cuddled with", api: "cuddle" },
   poke: { emoji: "👉", verb: "poked", api: "poke" },
-  tickle: { emoji: "😆", verb: "tickled", api: "tickle" },
-  feed: { emoji: "🍔", verb: "fed", api: "feed" },
+  tickle: { emoji: "😆", verb: "tickled", api: "tickle", source: "otakugifs" },
+  feed: { emoji: "🍔", verb: "fed", api: "nom" },
   smug: { emoji: "😏", verb: null, api: "smug" },
   wink: { emoji: "😉", verb: null, api: "wink" },
 };
@@ -17,10 +17,19 @@ async function getReactionGif(type) {
   const reaction = REACTIONS[type];
   if (!reaction || !reaction.api) return null;
   try {
-    const res = await fetch(`https://api.otakugifs.xyz/gif?reaction=${reaction.api}`, { signal: AbortSignal.timeout(10_000) });
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    return json.url || null;
+    let url;
+    if (reaction.source === "otakugifs") {
+      const res = await fetch(`https://api.otakugifs.xyz/gif?reaction=${reaction.api}`, { signal: AbortSignal.timeout(10_000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      url = json.url || null;
+    } else {
+      const res = await fetch(`https://api.waifu.pics/sfw/${reaction.api}`, { signal: AbortSignal.timeout(10_000) });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const json = await res.json();
+      url = json.url || null;
+    }
+    return url;
   } catch (error) {
     console.error(`[ReactionGif] Failed to fetch ${type}:`, error.message);
     return null;

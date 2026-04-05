@@ -11,6 +11,7 @@ module.exports = {
   userPermissions: ["ManageNicknames"],
   command: {
     enabled: true,
+    usage: "<set|reset> <@member> [name]",
     minArgsCount: 2,
     subcommands: [
       {
