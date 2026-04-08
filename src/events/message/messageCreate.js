@@ -3,6 +3,7 @@ const { PREFIX_COMMANDS, SUPPORT_SERVER } = require("@root/config");
 const EmbedUtils = require("@helpers/EmbedUtils");
 const { getAfkMentions, removeAfk } = require("@src/database/afk");
 const automodHandler = require("@handlers/automod");
+const { getGuildPrefix } = require("@src/database/prefix");
 
 /**
  * @param {import("@src/structures").BotClient} client
@@ -33,7 +34,7 @@ module.exports = async (client, message) => {
     }).catch(() => {});
   }
 
-  const prefix = PREFIX_COMMANDS.DEFAULT_PREFIX;
+  const prefix = getGuildPrefix(message.guild.id, PREFIX_COMMANDS.DEFAULT_PREFIX);
 
   // Track possible ghost pings for delete-event checks.
   automodHandler.trackPotentialGhostPing(message);

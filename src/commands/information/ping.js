@@ -11,7 +11,7 @@ module.exports = {
     enabled: true,
   },
   slashCommand: {
-    enabled: true,
+    enabled: false,
     ephemeral: true,
     options: [],
   },

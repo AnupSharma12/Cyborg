@@ -9,6 +9,7 @@ const {
 const EmbedUtils = require("@helpers/EmbedUtils");
 const { PREFIX_COMMANDS, SUPPORT_SERVER } = require("@root/config");
 const CommandCategory = require("@structures/CommandCategory");
+const { getGuildPrefix } = require("@src/database/prefix");
 
 const IDLE_TIMEOUT = 60_000; // 60 seconds before collector expires
 
@@ -40,7 +41,7 @@ module.exports = {
 
   async messageRun(message, args) {
     const { client } = message;
-    const prefix = PREFIX_COMMANDS.DEFAULT_PREFIX;
+    const prefix = getGuildPrefix(message.guild.id, PREFIX_COMMANDS.DEFAULT_PREFIX);
 
     if (args[0]) {
       const cmd = client.getCommand(args[0].toLowerCase()) || client.slashCommands.get(args[0].toLowerCase());
@@ -59,7 +60,7 @@ module.exports = {
 
   async interactionRun(interaction) {
     const { client } = interaction;
-    const prefix = PREFIX_COMMANDS.DEFAULT_PREFIX;
+    const prefix = getGuildPrefix(interaction.guild.id, PREFIX_COMMANDS.DEFAULT_PREFIX);
     const cmdName = interaction.options.getString("command");
 
     if (cmdName) {
