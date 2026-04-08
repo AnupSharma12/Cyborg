@@ -51,6 +51,7 @@ module.exports = {
     MUSIC: { enabled: true },
     MODERATION: { enabled: true },
     AUTOMOD: { enabled: true },
+    INVITE: { enabled: true },
     GIVEAWAY: { enabled: true },
     OWNER: { enabled: true },
     UTILITY: { enabled: true },

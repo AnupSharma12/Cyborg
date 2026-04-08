@@ -1,4 +1,6 @@
 const { ActivityType } = require("discord.js");
+const { cacheGuildInvites } = require("@handlers/invite");
+const { getGuildInviteSettings } = require("@src/database/invites");
 
 const ACTIVITY_TYPE_MAP = {
   PLAYING: ActivityType.Playing,
@@ -39,6 +41,13 @@ module.exports = async (client) => {
   console.log();
 
   client.logger.success(`Logged in as ${client.user.tag}! (${client.user.id})`);
+
+  // Warm invite caches for guilds that have tracking enabled.
+  for (const guild of client.guilds.cache.values()) {
+    const settings = getGuildInviteSettings(guild.id);
+    if (!settings.tracking) continue;
+    await cacheGuildInvites(guild).catch(() => null);
+  }
 
   if (config.GIVEAWAYS?.ENABLED && client.giveawaysManager) {
     client.logger.log("Initializing giveaways manager...");

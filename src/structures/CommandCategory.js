@@ -47,6 +47,12 @@ module.exports = {
     image: "https://icons.iconarchive.com/icons/icons8/windows-8/256/Security-Checked-Shield-icon.png",
     description: "Automatic moderation settings and detection controls",
   },
+  INVITE: {
+    name: "Invite",
+    emoji: "📨",
+    image: "https://cdn4.iconfinder.com/data/icons/general-business/150/Invite-512.png",
+    description: "Invite tracking and invite analytics commands",
+  },
   GIVEAWAY: {
     name: "Giveaway",
     emoji: "🎉",

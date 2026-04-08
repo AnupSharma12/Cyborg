@@ -1,4 +1,11 @@
 node_modules/
 .env
+.env.local
 logs/
-CyborgBot/
+*.log
+.DS_Store
+dist/
+build/
+.cache/
+.vscode/
+.gitkeep
